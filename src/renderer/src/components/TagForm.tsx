@@ -104,7 +104,8 @@ export function TagForm() {
             <span>{LABELS.genre}</span>
             <input {...fieldProps('genre')} />
             <span className="selection-count">
-              {selected.length > 0 ? `${selected.length}曲を編集中` : '曲を選んでください'}
+              {state.status ||
+                (selected.length > 0 ? `${selected.length}曲を編集中` : '曲を選んでください')}
             </span>
             <button
               type="button"

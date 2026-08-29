@@ -200,7 +200,6 @@ body.resizing .pane-grip {
 
 .track-table {
   display: grid;
-  grid-template-rows: auto 1fr;
   min-height: 0;
 }
 
@@ -278,26 +277,6 @@ body.resizing .pane-grip {
   letter-spacing: 0.04em;
   line-height: 1.4;
   padding: 0 4px;
-}
-
-.toolbar {
-  align-items: center;
-  display: flex;
-  gap: 12px;
-  padding-bottom: 8px;
-}
-
-.toolbar button {
-  background: var(--surface);
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius);
-  cursor: pointer;
-  padding: 5px 14px;
-  transition: background 0.12s ease;
-}
-
-.toolbar button:hover {
-  background: var(--accent-tint);
 }
 
 .status {

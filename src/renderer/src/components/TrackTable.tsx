@@ -51,9 +51,6 @@ export function TrackTable() {
 
   return (
     <section className="track-table">
-      <div className="toolbar">
-        <span className="status">{state.status}</span>
-      </div>
       <div className="track-table-scroll">
         <table>
           <thead>
