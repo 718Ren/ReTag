@@ -567,31 +567,3 @@ body.resizing .pane-grip {
   width: 160px;
 }
 
-.artwork-choices {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  width: 160px;
-}
-
-.artwork-choices button {
-  background: var(--surface);
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius);
-  cursor: pointer;
-  font-size: 12px;
-  max-width: 100%;
-  overflow: hidden;
-  padding: 2px 8px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.artwork-choices button:hover {
-  background: var(--accent-tint);
-}
-
-.artwork-choices .current {
-  background: var(--accent-tint-strong);
-  font-weight: 600;
-}
