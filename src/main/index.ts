@@ -9,6 +9,7 @@ function createWindow(): void {
     height: 680,
     // 起動直後の白い一瞬を避けるため、CSS の --bg と同じ色を敷いておく
     backgroundColor: '#1a1d24',
+    icon: join(import.meta.dirname, '../../resources/icon.ico'),
     // OS が描く灰色の帯をやめる。最小化・最大化・閉じるは Windows が描いたまま
     // 残るので、Snap Layouts などの挙動は失われない
     titleBarStyle: 'hidden',
