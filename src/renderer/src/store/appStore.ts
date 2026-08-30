@@ -5,6 +5,7 @@ import { buildEdits, type EditableField } from './editing';
 import { expandExclusive, isExpanded, nameClickAction, toggleExpanded } from './tree';
 import { clampColumnWidth, clampPaneWidth, loadLayout, saveLayout, type Layout } from './layout';
 import { combineResults } from './saveResults';
+import { buildRenameUndo, buildTagUndo, type UndoEntry } from './undo';
 import { applyPrefixRemoval, detectRemovablePrefix } from '../../../shared/rename';
 
 export type AppState = {
@@ -36,6 +37,8 @@ export type AppState = {
   layout: Layout;
   /** ルートそのものが開けないときだけ立てる。保存結果の status とは用途が別 */
   rootError: string | null;
+  /** 取り消し履歴。新しいものが末尾 */
+  undoStack: UndoEntry[];
   status: string;
 };
 
@@ -59,6 +62,7 @@ const initialState: AppState = {
   renamePromptOpen: false,
   layout: loadLayout(),
   rootError: null,
+  undoStack: [],
   status: '',
 };
 
@@ -275,6 +279,14 @@ export const actions = {
 
     const results = await window.api.renameFiles(renames);
 
+    const renamedPaths = new Set(results.filter((result) => result.ok).map((result) => result.path));
+    const undoRenames = buildRenameUndo(
+      renames.filter((rename) => renamedPaths.has(rename.path)),
+    );
+    if (undoRenames.length > 0) {
+      setState({ undoStack: [...state.undoStack, { kind: 'rename', renames: undoRenames }] });
+    }
+
     // selectDir は status を空に戻すので、読み直してから結果を出す
     if (state.currentDir) await actions.selectDir(state.currentDir);
     setState({ status: summarize(results, 'のファイル名を変更しました') });
@@ -286,6 +298,22 @@ export const actions = {
 
   selectAllTracks(): void {
     setState({ selectedPaths: state.tracks.map((track) => track.path), touched: {} });
+  },
+
+  /** 履歴の末尾を取り出して逆操作を実行する。失敗しても履歴からは取り除く */
+  async undo(): Promise<void> {
+    const entry = state.undoStack[state.undoStack.length - 1];
+    if (!entry) return;
+
+    setState({ undoStack: state.undoStack.slice(0, -1) });
+
+    if (entry.kind === 'tags') {
+      await window.api.writeTracks(entry.edits);
+    } else {
+      await window.api.renameFiles(entry.renames);
+    }
+
+    if (state.currentDir) await actions.selectDir(state.currentDir);
   },
 
   async save(): Promise<void> {
@@ -313,10 +341,21 @@ export const actions = {
       }
     }
 
+    // 書き込めた曲だけを取り消しの対象にする
+    const writtenPaths = new Set(results.filter((result) => result.ok).map((result) => result.path));
+    const undoEdits = buildTagUndo(
+      selected,
+      edits.filter((edit) => writtenPaths.has(edit.path)),
+    );
+
     setState({
       status: summarize(combineResults(results)),
       touched: {},
       pendingArtwork: null,
+      undoStack:
+        undoEdits.length > 0
+          ? [...state.undoStack, { kind: 'tags', edits: undoEdits }]
+          : state.undoStack,
     });
     await actions.reloadTracks();
   },
