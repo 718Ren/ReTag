@@ -56,15 +56,15 @@ describe('ArtworkPanel', () => {
     expect(screen.getByText(/保存で選択中の曲に適用/)).toBeDefined();
   });
 
-  it('画像が複数なら選択肢を出す', () => {
+  it('画像が複数あっても候補の一覧は出さない（枠を押して選ぶ）', () => {
     __setStateForTest({
       imageFiles: ['C:/m/cover.jpg', 'C:/m/back.png'],
       selectedImage: 'C:/m/cover.jpg',
     });
 
     render(<ArtworkPanel />);
-    expect(screen.getByRole('button', { name: 'cover.jpg' })).toBeDefined();
-    expect(screen.getByRole('button', { name: 'back.png' })).toBeDefined();
+    expect(screen.queryByRole('button', { name: 'cover.jpg' })).toBeNull();
+    expect(screen.queryByRole('button', { name: 'back.png' })).toBeNull();
   });
 
   it('選択ダイアログは今開いているフォルダから始める', async () => {

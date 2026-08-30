@@ -1,11 +1,6 @@
 import type { DragEvent } from 'react';
 import { actions, useAppState } from '../store/appStore';
 
-function baseName(filePath: string): string {
-  const parts = filePath.split(/[\\/]/);
-  return parts[parts.length - 1] ?? filePath;
-}
-
 function toMediaUrl(filePath: string): string {
   // file:// は開発時の http オリジンからブロックされるため、main 側の media:// 経由で読む
   return `media://local/${encodeURIComponent(filePath)}`;
@@ -39,21 +34,6 @@ export function ArtworkPanel() {
           <p>クリックで選択またはドロップ</p>
         )}
       </button>
-
-      {state.imageFiles.length > 1 && (
-        <div className="artwork-choices">
-          {state.imageFiles.map((imagePath) => (
-            <button
-              key={imagePath}
-              type="button"
-              className={imagePath === state.selectedImage ? 'current' : undefined}
-              onClick={() => actions.selectImage(imagePath)}
-            >
-              {baseName(imagePath)}
-            </button>
-          ))}
-        </div>
-      )}
 
       {state.pendingArtwork && <p className="artwork-note">保存で選択中の曲に適用されます</p>}
     </div>

@@ -22,10 +22,10 @@ const LABELS: Record<EditableField, string> = {
   genre: 'Genre',
 };
 
-/** 横一列に並べる数値欄。Disc# と Disc Count で「1 / 2」を作る */
+/** 横一列に並べる数値欄。Track# と Track Count で「1 / 2」を作る */
 const NUMBER_GROUPS: { label: string; fields: EditableField[] }[] = [
-  { label: 'Disc', fields: ['discNumber', 'discCount'] },
   { label: 'Track', fields: ['trackNumber', 'trackCount'] },
+  { label: 'Disc', fields: ['discNumber', 'discCount'] },
   { label: 'Year', fields: ['year'] },
 ];
 
@@ -49,6 +49,13 @@ export function TagForm() {
       if (event.ctrlKey && key === 'a' && !isEditableTarget(event.target as { tagName?: string })) {
         event.preventDefault();
         actions.selectAllTracks();
+        return;
+      }
+
+      // 入力欄での Ctrl+Z は文字入力の取り消しとして通す
+      if (event.ctrlKey && key === 'z' && !isEditableTarget(event.target as { tagName?: string })) {
+        event.preventDefault();
+        void actions.undo();
       }
     }
 
@@ -104,7 +111,8 @@ export function TagForm() {
             <span>{LABELS.genre}</span>
             <input {...fieldProps('genre')} />
             <span className="selection-count">
-              {selected.length > 0 ? `${selected.length}曲を編集中` : '曲を選んでください'}
+              {state.status ||
+                (selected.length > 0 ? `${selected.length}曲を編集中` : '曲を選んでください')}
             </span>
             <button
               type="button"

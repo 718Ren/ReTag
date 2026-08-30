@@ -51,10 +51,14 @@ export function TrackTable() {
 
   return (
     <section className="track-table">
-      <div className="toolbar">
-        <span className="status">{state.status}</span>
-      </div>
-      <div className="track-table-scroll">
+      {/* 表の外側（行の下の余白）を押したら選択を外す。行のクリックは伝播を止めない
+          ため、行側の処理が先に走って選択が確定する */}
+      <div
+        className="track-table-scroll"
+        onClick={(event) => {
+          if (event.target === event.currentTarget) actions.selectTracks([]);
+        }}
+      >
         <table>
           <thead>
             <tr>
@@ -69,7 +73,9 @@ export function TrackTable() {
             </tr>
           </thead>
           <tbody>
-            {state.tracks.map((track) => {
+            {state.loadingTracks
+              ? null
+              : state.tracks.map((track) => {
               const hiRes = isHighResolution(track.bitDepth, track.sampleRate);
               const quality = formatQuality(track.bitDepth, track.sampleRate);
 
@@ -96,9 +102,9 @@ export function TrackTable() {
                   <td title={track.album}>{track.album}</td>
                   <td>{formatDuration(track.durationSec)}</td>
                 </tr>
-              );
-            })}
-            {state.failures.map((failure) => (
+                );
+                })}
+            {!state.loadingTracks && state.failures.map((failure) => (
               <tr key={failure.path} className="failed">
                 <td colSpan={COLUMNS.length}>
                   <span title={failure.message}>⚠</span> {failure.path}
@@ -107,6 +113,11 @@ export function TrackTable() {
             ))}
           </tbody>
         </table>
+        {state.loadingTracks && (
+          <div className="track-loading" role="status" aria-label="読み込み中">
+            <span className="spinner" />
+          </div>
+        )}
       </div>
     </section>
   );
