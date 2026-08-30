@@ -4,21 +4,26 @@
  * 選択行は白抜きにせず淡いティントに濃い文字を載せる。
  */
 :root {
-  --accent: #88a3d4;
-  --accent-strong: #6b86bb;
-  --accent-tint: #e7edf8;
-  --accent-tint-strong: #d7e1f4;
+  --accent: #8ea9db;
+  --accent-strong: #a7bde8;
+  --accent-tint: #262d3d;
+  --accent-tint-strong: #333c52;
+  /* アクセント地の上に載せる文字色。淡い青の上なので暗い方が読める */
+  --on-accent: #1a1d24;
 
-  --bg: #f7f8fc;
-  --surface: #fdfdff;
-  --border: #dfe4f0;
-  --border-strong: #c6cfe3;
+  --bg: #1a1d24;
+  --surface: #22262f;
+  --border: #313644;
+  --border-strong: #454c5e;
 
-  --text: #2f3540;
-  --text-muted: #6f7787;
-  --danger: #b05a63;
+  --text: #e4e7ef;
+  --text-muted: #98a0b3;
+  --danger: #d98d95;
 
   --radius: 6px;
+
+  /* スクロールバーなど、ブラウザが描く部品を暗い側に寄せる */
+  color-scheme: dark;
 }
 
 * {
@@ -294,7 +299,7 @@ body.resizing .pane-grip {
 .hi-res {
   background: var(--accent);
   border-radius: 3px;
-  color: #ffffff;
+  color: var(--on-accent);
   display: inline-block;
   font-size: 10px;
   font-weight: 700;
@@ -419,7 +424,7 @@ body.resizing .pane-grip {
   background: var(--accent);
   border: 1px solid var(--accent-strong);
   border-radius: var(--radius);
-  color: #ffffff;
+  color: var(--on-accent);
   cursor: pointer;
   /* 行の高さに合わせて伸縮させ、入力欄と縦幅を揃える */
   align-self: stretch;
@@ -441,7 +446,7 @@ body.resizing .pane-grip {
 
 .modal-backdrop {
   align-items: center;
-  background: rgba(47, 53, 64, 0.35);
+  background: rgba(0, 0, 0, 0.55);
   display: flex;
   inset: 0;
   justify-content: center;
@@ -453,7 +458,7 @@ body.resizing .pane-grip {
   background: var(--surface);
   border: 1px solid var(--border-strong);
   border-radius: 10px;
-  box-shadow: 0 8px 24px rgba(47, 53, 64, 0.2);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
   max-width: 560px;
   padding: 18px 20px;
   width: calc(100% - 80px);
@@ -534,7 +539,7 @@ body.resizing .pane-grip {
 .modal-actions .save-button {
   background: var(--accent);
   border-color: var(--accent-strong);
-  color: #ffffff;
+  color: var(--on-accent);
 }
 
 /* --- アートワーク --- */
