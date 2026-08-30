@@ -82,14 +82,14 @@ describe('TagForm', () => {
     expect(screen.getByLabelText<HTMLInputElement>('Title').disabled).toBe(false);
   });
 
-  it('数値欄は Disc を左、Track を右に並べる', () => {
+  it('数値欄は Track を左、Disc を右に並べる', () => {
     __setStateForTest({
       tracks: [track({ path: 'C:/m/1.mp3' })],
       selectedPaths: ['C:/m/1.mp3'],
     });
     const { container } = render(<TagForm />);
     const labels = [...container.querySelectorAll('.number-label')].map((el) => el.textContent);
-    expect(labels).toEqual(['Disc', 'Track', 'Year']);
+    expect(labels).toEqual(['Track', 'Disc', 'Year']);
   });
 
   it('選択曲数と保存ボタンを表示する', () => {

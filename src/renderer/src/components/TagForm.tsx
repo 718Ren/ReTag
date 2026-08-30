@@ -22,10 +22,10 @@ const LABELS: Record<EditableField, string> = {
   genre: 'Genre',
 };
 
-/** 横一列に並べる数値欄。Disc# と Disc Count で「1 / 2」を作る */
+/** 横一列に並べる数値欄。Track# と Track Count で「1 / 2」を作る */
 const NUMBER_GROUPS: { label: string; fields: EditableField[] }[] = [
-  { label: 'Disc', fields: ['discNumber', 'discCount'] },
   { label: 'Track', fields: ['trackNumber', 'trackCount'] },
+  { label: 'Disc', fields: ['discNumber', 'discCount'] },
   { label: 'Year', fields: ['year'] },
 ];
 
