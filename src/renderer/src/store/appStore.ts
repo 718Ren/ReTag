@@ -24,6 +24,8 @@ export type AppState = {
   /** 検索結果のうち閉じている枝。既定は全部開いた状態 */
   searchCollapsed: string[];
   tracks: TrackTags[];
+  /** フォルダを開いてタグを読んでいる間だけ真 */
+  loadingTracks: boolean;
   failures: { path: string; message: string }[];
   selectedPaths: string[];
   touched: Partial<Record<EditableField, string>>;
@@ -52,6 +54,7 @@ const initialState: AppState = {
   searchResults: null,
   searchCollapsed: [],
   tracks: [],
+  loadingTracks: false,
   failures: [],
   selectedPaths: [],
   touched: {},
@@ -169,6 +172,8 @@ export const actions = {
   },
 
   async selectDir(dir: string): Promise<void> {
+    setState({ loadingTracks: true });
+
     let listing;
     try {
       listing = await window.api.listDir(dir);
@@ -177,6 +182,7 @@ export const actions = {
       setState({
         currentDir: dir,
         tracks: [],
+        loadingTracks: false,
         failures: [],
         rootError: `${dir} を開けません: ${message}`,
       });
@@ -193,6 +199,7 @@ export const actions = {
 
     setState({
       currentDir: dir,
+      loadingTracks: false,
       childDirs: { ...state.childDirs, [dir]: listing.dirs },
       expanded: expandExclusive(state.expanded, dir),
       tracks,

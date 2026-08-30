@@ -119,4 +119,26 @@ describe('TrackTable', () => {
 
     expect(container.querySelectorAll('tbody tr.selected')).toHaveLength(1);
   });
+
+  it('読み込み中はスピナーを出す', () => {
+    __setStateForTest({ loadingTracks: true });
+
+    const { container } = render(<TrackTable />);
+    expect(container.querySelector('.track-loading')).not.toBeNull();
+  });
+
+  it('読み込み中は行を出さない', () => {
+    __setStateForTest({ loadingTracks: true });
+
+    const { container } = render(<TrackTable />);
+    expect(container.querySelectorAll('tbody tr')).toHaveLength(0);
+  });
+
+  it('読み込みが終われば行を出す', () => {
+    __setStateForTest({ loadingTracks: false });
+
+    const { container } = render(<TrackTable />);
+    expect(container.querySelector('.track-loading')).toBeNull();
+    expect(container.querySelectorAll('tbody tr').length).toBeGreaterThan(0);
+  });
 });
