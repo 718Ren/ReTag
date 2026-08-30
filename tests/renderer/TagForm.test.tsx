@@ -1,8 +1,8 @@
 // @vitest-environment jsdom
-import { describe, expect, it, beforeEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { describe, expect, it, beforeEach, vi } from 'vitest';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { TagForm } from '../../src/renderer/src/components/TagForm';
-import { __setStateForTest } from '../../src/renderer/src/store/appStore';
+import { actions, __setStateForTest } from '../../src/renderer/src/store/appStore';
 import type { TrackTags } from '../../src/shared/types';
 
 function track(overrides: Partial<TrackTags>): TrackTags {
@@ -117,5 +117,34 @@ describe('TagForm', () => {
     expect(genreRow.contains(screen.getByLabelText('Genre'))).toBe(true);
     expect(genreRow.contains(save)).toBe(true);
     expect(genreRow.textContent).toContain('1曲を編集中');
+  });
+
+  it('Ctrl+Z で取り消しを呼ぶ', () => {
+    const undo = vi.fn();
+    const original = actions.undo;
+    actions.undo = undo;
+
+    render(<TagForm />);
+    fireEvent.keyDown(window, { key: 'z', ctrlKey: true });
+
+    expect(undo).toHaveBeenCalled();
+    actions.undo = original;
+  });
+
+  it('入力欄の中では取り消しを呼ばない（文字入力の取り消しを優先する）', () => {
+    __setStateForTest({
+      tracks: [track({ path: 'C:/m/1.mp3' })],
+      selectedPaths: ['C:/m/1.mp3'],
+    });
+
+    const undo = vi.fn();
+    const original = actions.undo;
+    actions.undo = undo;
+
+    render(<TagForm />);
+    fireEvent.keyDown(screen.getByLabelText('Title'), { key: 'z', ctrlKey: true });
+
+    expect(undo).not.toHaveBeenCalled();
+    actions.undo = original;
   });
 });

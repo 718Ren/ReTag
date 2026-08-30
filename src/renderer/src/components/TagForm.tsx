@@ -49,6 +49,13 @@ export function TagForm() {
       if (event.ctrlKey && key === 'a' && !isEditableTarget(event.target as { tagName?: string })) {
         event.preventDefault();
         actions.selectAllTracks();
+        return;
+      }
+
+      // 入力欄での Ctrl+Z は文字入力の取り消しとして通す
+      if (event.ctrlKey && key === 'z' && !isEditableTarget(event.target as { tagName?: string })) {
+        event.preventDefault();
+        void actions.undo();
       }
     }
 
