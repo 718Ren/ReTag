@@ -51,7 +51,14 @@ export function TrackTable() {
 
   return (
     <section className="track-table">
-      <div className="track-table-scroll">
+      {/* 表の外側（行の下の余白）を押したら選択を外す。行のクリックは伝播を止めない
+          ため、行側の処理が先に走って選択が確定する */}
+      <div
+        className="track-table-scroll"
+        onClick={(event) => {
+          if (event.target === event.currentTarget) actions.selectTracks([]);
+        }}
+      >
         <table>
           <thead>
             <tr>

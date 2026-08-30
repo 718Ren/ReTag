@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, expect, it, beforeEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { TrackTable } from '../../src/renderer/src/components/TrackTable';
 import { __setStateForTest } from '../../src/renderer/src/store/appStore';
 import type { TrackTags } from '../../src/shared/types';
@@ -100,5 +100,23 @@ describe('TrackTable', () => {
   it('ファイル名の列は持たない', () => {
     render(<TrackTable />);
     expect(screen.queryByRole('columnheader', { name: /ファイル名/ })).toBeNull();
+  });
+
+  it('表の空白部分をクリックすると選択が外れる', () => {
+    __setStateForTest({ selectedPaths: ['C:/m/1.mp3'] });
+
+    const { container } = render(<TrackTable />);
+    fireEvent.click(container.querySelector('.track-table-scroll')!);
+
+    expect(container.querySelectorAll('tbody tr.selected')).toHaveLength(0);
+  });
+
+  it('行のクリックでは選択が外れない', () => {
+    __setStateForTest({ selectedPaths: [] });
+
+    const { container } = render(<TrackTable />);
+    fireEvent.click(screen.getByText('一曲目'));
+
+    expect(container.querySelectorAll('tbody tr.selected')).toHaveLength(1);
   });
 });
