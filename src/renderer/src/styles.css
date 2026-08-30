@@ -21,6 +21,7 @@
   --danger: #d98d95;
 
   --radius: 6px;
+  --title-bar-height: 40px;
 
   /* スクロールバーなど、ブラウザが描く部品を暗い側に寄せる */
   color-scheme: dark;
@@ -49,9 +50,32 @@ button {
   font: inherit;
 }
 
-.layout {
+.app {
   display: grid;
+  grid-template-rows: var(--title-bar-height) 1fr;
   height: 100vh;
+}
+
+/* 帯そのものを掴めるようにする。右端は Windows が描くボタンが載るので空けておく */
+.title-bar {
+  -webkit-app-region: drag;
+  align-items: center;
+  background: var(--surface);
+  display: flex;
+  padding: 0 12px;
+}
+
+.logo {
+  color: var(--accent);
+  display: block;
+}
+
+.layout {
+  /* 区切り線をバーの下端に引くと、右上の titleBarOverlay に隠れて途切れる。
+     内容側の上端に引けば全幅で出る */
+  border-top: 1px solid var(--border);
+  display: grid;
+  min-height: 0;
 }
 
 .pane {

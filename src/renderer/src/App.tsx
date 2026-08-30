@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { DirectoryTree } from './components/DirectoryTree';
+import { TitleBar } from './components/TitleBar';
 import { TrackTable } from './components/TrackTable';
 import { TagForm } from './components/TagForm';
 import { RenamePrompt } from './components/RenamePrompt';
@@ -22,20 +23,23 @@ export function App() {
   }, [state.treeQuery]);
 
   return (
-    <div className="layout" style={{ gridTemplateColumns: `${state.layout.paneWidth}px 6px 1fr` }}>
-      <DirectoryTree />
-      <div
-        role="separator"
-        aria-orientation="vertical"
-        aria-label="左ペインの幅を変更"
-        className="pane-grip"
-        onPointerDown={(event) => startDrag(event, state.layout.paneWidth)}
-      />
-      <main className="pane pane-right">
-        <TrackTable />
-        <TagForm />
-      </main>
-      <RenamePrompt />
+    <div className="app">
+      <TitleBar />
+      <div className="layout" style={{ gridTemplateColumns: `${state.layout.paneWidth}px 6px 1fr` }}>
+        <DirectoryTree />
+        <div
+          role="separator"
+          aria-orientation="vertical"
+          aria-label="左ペインの幅を変更"
+          className="pane-grip"
+          onPointerDown={(event) => startDrag(event, state.layout.paneWidth)}
+        />
+        <main className="pane pane-right">
+          <TrackTable />
+          <TagForm />
+        </main>
+        <RenamePrompt />
+      </div>
     </div>
   );
 }
