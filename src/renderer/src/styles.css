@@ -703,3 +703,43 @@ body.resizing .pane-grip {
 }
 
 
+/*
+ * テーマ切り替えの演出。新しい配色を上に重ね、押した場所から広がる円で
+ * 切り出す（円の指定は reveal.ts 側で与える）。既定のクロスフェードは
+ * 二重に効いてぼやけるので止める。
+ */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 0;
+}
+
+::view-transition-new(root) {
+  z-index: 1;
+}
+
+/* 太陽と月の入れ替わり。回しながら現れる */
+.theme-toggle svg {
+  animation: theme-icon-in 0.42s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes theme-icon-in {
+  from {
+    opacity: 0;
+    transform: rotate(-90deg) scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-toggle svg {
+    animation: none;
+  }
+}

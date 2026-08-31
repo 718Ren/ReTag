@@ -1,5 +1,6 @@
 import { Logo } from './Logo';
 import { actions, useAppState } from '../store/appStore';
+import { revealTheme } from '../store/reveal';
 
 /** 太陽と月。線は currentColor に従うので、帯の文字色で描かれる */
 function ThemeIcon({ dark }: { dark: boolean }) {
@@ -40,9 +41,16 @@ export function TitleBar() {
         className="theme-toggle"
         aria-label={dark ? 'ライトモードに切り替える' : 'ダークモードに切り替える'}
         title={dark ? 'ライトモードに切り替える' : 'ダークモードに切り替える'}
-        onClick={() => actions.toggleTheme()}
+        onClick={(event) => {
+          // 押したボタンの中心から広がらせる
+          const box = event.currentTarget.getBoundingClientRect();
+          revealTheme({ x: box.left + box.width / 2, y: box.top + box.height / 2 }, () =>
+            actions.toggleTheme(),
+          );
+        }}
       >
-        <ThemeIcon dark={dark} />
+        {/* テーマが変わると別要素になり、出現のアニメーションが流れる */}
+        <ThemeIcon key={theme} dark={dark} />
       </button>
     </header>
   );
