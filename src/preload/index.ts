@@ -17,6 +17,8 @@ const api = {
     ipcRenderer.invoke('files:rename', requests),
   applyArtwork: (paths: string[], imagePath: string): Promise<WriteResult[]> =>
     ipcRenderer.invoke('art:apply', { paths, imagePath }),
+  // タイトルバーのボタンは Windows が描くので、色は main 側で塗り替えてもらう
+  applyTheme: (theme: 'light' | 'dark'): Promise<void> => ipcRenderer.invoke('theme:apply', theme),
   // Electron 32 以降 renderer の File.path は削除されている。実パスはここでしか取れない
   getDroppedFilePath: (file: File): string => webUtils.getPathForFile(file),
 };

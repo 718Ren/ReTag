@@ -6,6 +6,7 @@ import { expandExclusive, isExpanded, nameClickAction, toggleExpanded } from './
 import { clampColumnWidth, clampPaneWidth, loadLayout, saveLayout, type Layout } from './layout';
 import { combineResults } from './saveResults';
 import { buildRenameUndo, buildTagUndo, type UndoEntry } from './undo';
+import { loadTheme, nextTheme, saveTheme, type Theme } from './theme';
 import { applyPrefixRemoval, detectRemovablePrefix } from '../../../shared/rename';
 
 export type AppState = {
@@ -41,6 +42,7 @@ export type AppState = {
   rootError: string | null;
   /** 取り消し履歴。新しいものが末尾 */
   undoStack: UndoEntry[];
+  theme: Theme;
   status: string;
 };
 
@@ -66,6 +68,7 @@ const initialState: AppState = {
   layout: loadLayout(),
   rootError: null,
   undoStack: [],
+  theme: loadTheme(),
   status: '',
 };
 
@@ -231,6 +234,14 @@ export const actions = {
     const layout = { ...state.layout, columnWidths };
     setState({ layout });
     saveLayout(layout);
+  },
+
+  /** ライトとダークを入れ替える。選択は覚えるので次回もこの見た目で開く */
+  toggleTheme(): void {
+    const theme = nextTheme(state.theme);
+    setState({ theme });
+    saveTheme(theme);
+    void window.api.applyTheme(theme);
   },
 
   selectTracks(paths: string[]): void {
