@@ -4,11 +4,66 @@
  * 選択行は白抜きにせず淡いティントに濃い文字を載せる。
  */
 :root {
+  --accent: #88a3d4;
+  --accent-strong: #6b86bb;
+  --accent-tint: #e7edf8;
+  --accent-tint-strong: #d7e1f4;
+  /* アクセント地の上に載せる文字色 */
+  --on-accent: #ffffff;
+
+  --bg: #f7f8fc;
+  --surface: #fdfdff;
+  --border: #dfe4f0;
+  --border-strong: #c6cfe3;
+
+  --text: #2f3540;
+  --text-muted: #6f7787;
+  --danger: #b05a63;
+
+  --shade: rgba(47, 53, 64, 0.35);
+  --drop-shadow: 0 8px 24px rgba(47, 53, 64, 0.2);
+
+  --radius: 6px;
+  --title-bar-height: 40px;
+
+  /* スクロールバーなど、ブラウザが描く部品の明暗 */
+  color-scheme: light;
+}
+
+/*
+ * ダーク。淡い青のアクセントは暗背景だと沈むので少し明るくし、
+ * その上の文字は白ではなく暗い色にしないと読めない。
+ * 選んでいない間は OS の設定に合わせる。data-theme が付けばそちらが勝つ。
+ */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --accent: #8ea9db;
+    --accent-strong: #a7bde8;
+    --accent-tint: #262d3d;
+    --accent-tint-strong: #333c52;
+    --on-accent: #1a1d24;
+
+    --bg: #1a1d24;
+    --surface: #22262f;
+    --border: #313644;
+    --border-strong: #454c5e;
+
+    --text: #e4e7ef;
+    --text-muted: #98a0b3;
+    --danger: #d98d95;
+
+    --shade: rgba(0, 0, 0, 0.55);
+    --drop-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme='dark'] {
   --accent: #8ea9db;
   --accent-strong: #a7bde8;
   --accent-tint: #262d3d;
   --accent-tint-strong: #333c52;
-  /* アクセント地の上に載せる文字色。淡い青の上なので暗い方が読める */
   --on-accent: #1a1d24;
 
   --bg: #1a1d24;
@@ -20,10 +75,9 @@
   --text-muted: #98a0b3;
   --danger: #d98d95;
 
-  --radius: 6px;
-  --title-bar-height: 40px;
+  --shade: rgba(0, 0, 0, 0.55);
+  --drop-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
 
-  /* スクロールバーなど、ブラウザが描く部品を暗い側に寄せる */
   color-scheme: dark;
 }
 
@@ -56,18 +110,46 @@ button {
   height: 100vh;
 }
 
-/* 帯そのものを掴めるようにする。右端は Windows が描くボタンが載るので空けておく */
+/*
+ * 帯そのものを掴めるようにする。右端には Windows がボタンを重ねて描くので、
+ * env(titlebar-area-width) までに中身を収める。ここを 100% にすると、
+ * 右端に置いたものがボタンの下に潜って押せなくなる。
+ */
 .title-bar {
   -webkit-app-region: drag;
   align-items: center;
   background: var(--surface);
   display: flex;
   padding: 0 12px;
+  width: env(titlebar-area-width, 100%);
 }
 
 .logo {
   color: var(--accent);
   display: block;
+}
+
+.theme-toggle {
+  -webkit-app-region: no-drag;
+  align-items: center;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  height: 26px;
+  justify-content: center;
+  /* 右端は Windows が描くボタンが載るので、その手前で止める */
+  margin-left: auto;
+  padding: 0;
+  transition: background 0.12s ease, color 0.12s ease;
+  width: 26px;
+}
+
+.theme-toggle:hover {
+  background: var(--accent-tint);
+  color: var(--accent-strong);
 }
 
 .layout {
@@ -470,7 +552,7 @@ body.resizing .pane-grip {
 
 .modal-backdrop {
   align-items: center;
-  background: rgba(0, 0, 0, 0.55);
+  background: var(--shade);
   display: flex;
   inset: 0;
   justify-content: center;
@@ -482,7 +564,7 @@ body.resizing .pane-grip {
   background: var(--surface);
   border: 1px solid var(--border-strong);
   border-radius: 10px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  box-shadow: var(--drop-shadow);
   max-width: 560px;
   padding: 18px 20px;
   width: calc(100% - 80px);
@@ -619,4 +701,5 @@ body.resizing .pane-grip {
   margin: 0;
   width: 160px;
 }
+
 

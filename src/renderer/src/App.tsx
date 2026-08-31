@@ -16,6 +16,12 @@ export function App() {
     void actions.init();
   }, []);
 
+  // CSS 側の変数を切り替える。Windows が描くボタンの色は main にしか変えられない
+  useEffect(() => {
+    document.documentElement.dataset.theme = state.theme;
+    void window.api.applyTheme(state.theme);
+  }, [state.theme]);
+
   // 1文字ごとに全階層を歩くと重いので、入力が止まってから探す
   useEffect(() => {
     const timer = setTimeout(() => void actions.runSearch(), 250);
