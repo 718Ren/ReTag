@@ -9,12 +9,12 @@
     "build": "electron-vite build",
     "start": "electron-vite preview",
     "test": "vitest run --passWithNoTests",
-    "typecheck": "tsc --noEmit -p tsconfig.json"
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "package": "npm run build && electron-builder",
+    "package:dir": "npm run build && electron-builder --dir"
   },
   "dependencies": {
     "node-taglib-sharp": "^6.0.3",
-    "react": "^19.2.8",
-    "react-dom": "^19.2.8",
     "zod": "^4.4.3"
   },
   "devDependencies": {
@@ -25,10 +25,15 @@
     "@types/react-dom": "^19.2.5",
     "@vitejs/plugin-react": "^5.2.0",
     "electron": "^44.0.0",
+    "electron-builder": "^26.15.3",
     "electron-vite": "^5.0.0",
     "jsdom": "^29.1.1",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
     "typescript": "^7.0.2",
     "vite": "^7.3.6",
     "vitest": "^4.1.11"
-  }
+  },
+  "description": "音声ファイルのタグをまとめて編集するデスクトップアプリ",
+  "author": "718Ren"
 }

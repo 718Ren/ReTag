@@ -1,0 +1,32 @@
+appId: com.github.718ren.retag
+productName: ReTag
+copyright: Copyright © 2026 718Ren
+
+directories:
+  output: release
+  buildResources: resources
+
+# out/ は electron-vite の出力。package.json の dependencies は
+# electron-builder が自動で同梱するので、ここでは並べない。
+files:
+  - out/**
+  - package.json
+
+# アイコンは asar の外に置く。実行時に process.resourcesPath から読むため。
+extraResources:
+  - from: resources/icon.ico
+    to: icon.ico
+
+win:
+  icon: resources/icon.ico
+  target:
+    - target: nsis
+
+nsis:
+  # 保存先を選べるようにする。既定の1クリック導入は、どこに入ったか分からない
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: ReTag
