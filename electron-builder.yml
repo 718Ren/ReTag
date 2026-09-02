@@ -21,6 +21,11 @@ win:
   icon: resources/icon.ico
   target:
     - target: nsis
+    # インストールせずに試したい人向け。毎回 %TEMP% に展開するので起動は遅い
+    - target: portable
+
+portable:
+  artifactName: ${productName}-${version}-portable.${ext}
 
 nsis:
   # 保存先を選べるようにする。既定の1クリック導入は、どこに入ったか分からない
